@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1A – Successful Conversations</title>
+    <style>
+        :root {
+            --primary: #8bb8e8;
+            --primary-dark: #5a9bd5;
+            --secondary: #f0f4f8;
+            --text-main: #334155;
+            --text-light: #64748b;
+            --white: #ffffff;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--secondary);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background-color: var(--white);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .nav-links {
+            list-style: none;
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px 0;
+        }
+
+        .nav-links li button {
+            width: 100%;
+            text-align: left;
+            padding: 15px 20px;
+            background: none;
+            border: none;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links li button:hover, .nav-links li button.active {
+            background-color: var(--secondary);
+            color: var(--primary-dark);
+            font-weight: 600;
+            border-left: 4px solid var(--primary-dark);
+        }
+
+        .progress-container {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            background-color: var(--white);
+        }
+
+        .progress-text {
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--success);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .mobile-header {
+            display: none;
+            background-color: var(--white);
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-main);
+        }
+
+        .content-area {
+            padding: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .module-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .module-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2, h3 {
+            color: #1e293b;
+            margin-bottom: 15px;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 25px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary-dark);
+            border: 2px solid var(--primary-dark);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-dark);
+            color: var(--white);
+        }
+
+        .btn-success { background-color: var(--success); }
+        .btn-success:hover { background-color: #059669; }
+        .btn-danger { background-color: var(--danger); }
+        .btn-danger:hover { background-color: #dc2626; }
+
+        /* TTS Button */
+        .tts-btn {
+            background: #e0f2fe;
+            color: #0284c7;
+            border: 1px solid #bae6fd;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .tts-btn:hover {
+            background: #bae6fd;
+            transform: scale(1.1);
+        }
+
+        .text-en {
+            font-weight: 500;
+            color: #1e293b;
+        }
+
+        .text-vi {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            font-style: italic;
+            margin-top: 4px;
+            display: block;
+        }
+
+        /* Activity specific */
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .img-placeholder {
+            background: #e2e8f0;
+            height: 120px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: var(--text-light);
+            font-size: 2rem;
+            position: relative;
+        }
+
+        .img-placeholder span {
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+
+        .list-group {
+            list-style: none;
+        }
+
+        .list-group li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .list-group li:last-child {
+            border-bottom: none;
+        }
+
+        .list-group li input[type="checkbox"] {
+            margin-top: 5px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .q-toggle {
+            cursor: pointer;
+            padding: 5px 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--white);
+            font-weight: bold;
+            width: 45px;
+            text-align: center;
+        }
+
+        .q-toggle.yes { background: #dcfce7; color: var(--success); border-color: #86efac; }
+        .q-toggle.no { background: #fee2e2; color: var(--danger); border-color: #fca5a5; }
+
+        /* Quiz */
+        .quiz-question {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed var(--border);
+        }
+        .quiz-question h4 {
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .quiz-options label {
+            display: block;
+            padding: 10px;
+            margin-bottom: 8px;
+            background: var(--secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .quiz-options label:hover {
+            background: #e2e8f0;
+        }
+        .quiz-options input[type="radio"] {
+            margin-right: 10px;
+        }
+        .explanation {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f0fdf4;
+            border-left: 4px solid var(--success);
+            border-radius: 4px;
+            display: none;
+            font-size: 0.9rem;
+        }
+        .explanation.show { display: block; }
+
+        /* Flashcard */
+        .flashcard-container {
+            perspective: 1000px;
+            width: 100%;
+            max-width: 400px;
+            height: 250px;
+            margin: 0 auto 20px;
+            cursor: pointer;
+        }
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+        .flashcard-front, .flashcard-back {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden;
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+            border: 2px solid var(--primary);
+        }
+        .flashcard-back {
+            transform: rotateY(180deg);
+            background: #f8fafc;
+            border-color: var(--primary-dark);
+        }
+        .flashcard h2 { font-size: 2rem; margin-bottom: 5px; color: var(--primary-dark); }
+        .flashcard .ipa { color: var(--text-light); font-family: monospace; font-size: 1.1rem; }
+
+        /* Utilities */
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .flex-gap { display: flex; gap: 10px; flex-wrap: wrap; }
+        .mt-20 { margin-top: 20px; }
+        .mb-20 { margin-bottom: 20px; }
+        .text-center { text-align: center; }
+        .note { font-size: 0.85rem; color: var(--text-light); font-style: italic; }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: var(--white);
+            padding: 30px;
+            border-radius: var(--radius);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar {
+                position: fixed;
+                top: 0; left: 0; height: 100%;
+                transform: translateX(-100%);
+            }
+            .sidebar.open { transform: translateX(0); }
+            .mobile-header { display: flex; }
+            .content-area { padding: 20px; }
+            .image-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>1A – Successful Conversations</h2>
+            <p>Unit 1: Getting Acquainted</p>
+        </div>
+        <ul class="nav-links">
+            <li><button onclick="navigateTo('overview')" class="active">📖 Lesson Overview</button></li>
+            <li><button onclick="navigateTo('activity1')">1️⃣ Activity 1 – Greetings</button></li>
+            <li><button onclick="navigateTo('activity2')">2️⃣ Activity 2 – Conversation</button></li>
+            <li><button onclick="navigateTo('activity3')">3️⃣ Activity 3 – Acquainted</button></li>
+            <li><button onclick="navigateTo('pronunciation')">🗣️ Pronunciation Lab</button></li>
+            <li><button onclick="navigateTo('exercises')">📝 Interactive Exercises</button></li>
+            <li><button onclick="navigateTo('speaking')">🎤 Speaking Practice</button></li>
+            <li><button onclick="navigateTo('flashcards')">🃏 Vocabulary Cards</button></li>
+            <li><button onclick="navigateTo('dashboard')">📊 Progress Dashboard</button></li>
+        </ul>
+        <div class="progress-container">
+            <div class="progress-text">
+                <span>Tiến độ tổng thể</span>
+                <span id="overall-progress-text">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="overall-progress-bar"></div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="mobile-header">
+            <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+            <h3>1A – Successful Conversations</h3>
+            <div style="width: 30px;"></div>
+        </header>
+
+        <div class="content-area">
+            
+            <!-- TTS Controls -->
+            <div class="card flex-between mb-20" style="padding: 15px;">
+                <div class="flex-gap" style="align-items: center;">
+                    <span style="font-weight: 600; color: var(--primary-dark);">🔊 Giọng đọc:</span>
+                    <select id="voice-select" style="padding: 5px; border-radius: 5px; border: 1px solid var(--border); max-width: 200px;"></select>
+                    <select id="rate-select" style="padding: 5px; border-radius: 5px; border: 1px solid var(--border);">
+                        <option value="0.7">0.7x (Chậm)</option>
+                        <option value="0.85">0.85x</option>
+                        <option value="1" selected>1.0x</option>
+                        <option value="1.1">1.1x</option>
+                    </select>
+                </div>
+                <div class="flex-gap">
+                    <button class="btn btn-outline" onclick="stopTTS()" style="padding: 5px 10px; font-size: 0.9rem;">⏹ Stop</button>
+                </div>
+            </div>
+
+            <!-- MODULE 1: OVERVIEW -->
+            <section id="overview" class="module-section active">
+                <h1>Lesson Overview</h1>
+                <div class="card">
+                    <h2>Chào mừng đến với bài học!</h2>
+                    <p>Bài học này giúp bạn làm quen với các kỹ năng giao tiếp cơ bản: chào hỏi, bắt đầu và duy trì một cuộc hội thoại hiệu quả.</p>
+                    <br>
+                    <h3>🎯 Mục tiêu bài học:</h3>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li>Biết cách chào hỏi người mới gặp và người quen.</li>
+                        <li>Sử dụng câu hỏi phù hợp để bắt đầu và duy trì cuộc hội thoại.</li>
+                        <li>Áp dụng các nguyên tắc giao tiếp hiệu quả.</li>
+                        <li>Nhận biết câu hỏi phù hợp và không phù hợp khi mới làm quen.</li>
+                        <li>Thực hành hội thoại bằng tiếng Anh với bạn học.</li>
+                    </ul>
+                    <br>
+                    <button class="btn" onclick="markComplete('overview')">Đánh dấu hoàn thành</button>
+                </div>
+            </section>
+
+            <!-- MODULE 2: ACTIVITY 1 -->
+            <section id="activity1" class="module-section">
+                <h1>Activity 1 – Greetings</h1>
+                
+                <div class="card">
+                    <h2>1A. Pair work: Look at these pictures</h2>
+                    <div class="image-grid">
+                        <div class="img-placeholder">🙇‍♂️🙇‍♂️<span>Bowing</span></div>
+                        <div class="img-placeholder">🤗<span>Hugging</span></div>
+                        <div class="img-placeholder">🤝<span>Handshake</span></div>
+                        <div class="img-placeholder">🙋‍♂️🤝<span>Handshake (Casual)</span></div>
+                        <div class="img-placeholder">👋<span>Waving</span></div>
+                        <div class="img-placeholder">🤝<span>Handshake (Formal)</span></div>
+                    </div>
+                    <p class="note">* Lưu ý: Hình ảnh minh họa mang tính tượng trưng.</p>
+                    
+                    <h3 style="margin-top: 20px;">Discuss the questions:</h3>
+                    <ul class="list-group">
+                        <li>
+                            <div>
+                                <span class="text-en">How are the people greeting each other? <button class="tts-btn" onclick="speak('How are the people greeting each other?')">🔊</button></span>
+                                <span class="text-vi">Mọi người đang chào hỏi nhau như thế nào?</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <span class="text-en">Which people do you think are meeting for the first time? <button class="tts-btn" onclick="speak('Which people do you think are meeting for the first time?')">🔊</button></span>
+                                <span class="text-vi">Bạn nghĩ những người nào đang gặp nhau lần đầu?</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <span class="text-en">How do you greet someone you've just met? What do you usually say? <button class="tts-btn" onclick="speak('How do you greet someone you have just met? What do you usually say?')">🔊</button></span>
+                                <span class="text-vi">Bạn chào người mới gặp như thế nào? Bạn thường nói gì?</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <span class="text-en">How do you greet someone you know very well? What do you usually say? <button class="tts-btn" onclick="speak('How do you greet someone you know very well? What do you usually say?')">🔊</button></span>
+                                <span class="text-vi">Bạn chào người rất thân quen như thế nào?</span>
+                            </div>
+                        </li>
+                    </ul>
+                    <div style="margin-top: 15px; padding: 15px; background: #fef3c7; border-radius: 8px;">
+                        <span class="text-en">"The people in the first picture are bowing." <button class="tts-btn" onclick="speak('The people in the first picture are bowing.')">🔊</button></span>
+                        <span class="text-vi">Những người trong bức tranh đầu tiên đang cúi chào.</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>1B. Listen</h2>
+                    <p>You will hear six conversations. Number the pictures in part A from 1 to 6.</p>
+                    <div style="padding: 15px; background: #fee2e2; color: #b91c1c; border-radius: 8px; margin-top: 10px;">
+                        ⚠️ <strong>Original audio not provided.</strong> (Không có file âm thanh gốc cho phần này).
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>1C. Listen again</h2>
+                    <p>Write the last question of each conversation.</p>
+                    <div style="display: grid; gap: 10px; margin-top: 15px;">
+                        <div>
+                            <label>1. </label>
+                            <input type="text" value="Can I call you later?" readonly style="padding: 8px; border: 1px solid var(--border); border-radius: 4px; width: 80%; background: #f1f5f9;">
+                        </div>
+                        <div><label>2. </label><input type="text" placeholder="Nhập câu trả lời..." style="padding: 8px; border: 1px solid var(--border); border-radius: 4px; width: 80%;"></div>
+                        <div><label>3. </label><input type="text" placeholder="Nhập câu trả lời..." style="padding: 8px; border: 1px solid var(--border); border-radius: 4px; width: 80%;"></div>
+                        <div><label>4. </label><input type="text" placeholder="Nhập câu trả lời..." style="padding: 8px; border: 1px solid var(--border); border-radius: 4px; width: 80%;"></div>
+                        <div><label>5. </label><input type="text" placeholder="Nhập câu trả lời..." style="padding: 8px; border: 1px solid var(--border); border-radius: 4px; width: 80%;"></div>
+                        <div><label>6. </label><input type="text" placeholder="Nhập câu trả lời..." style="padding: 8px; border: 1px solid var(--border); border-radius: 4px; width: 80%;"></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>1D. Pair work</h2>
+                    <p>Greet your partner and begin a conversation. Then ask questions from part C to continue the conversation.</p>
+                    <div style="margin-top: 15px;">
+                        <h3>💡 Mẫu câu hữu ích:</h3>
+                        <p><strong>Meeting for the first time:</strong></p>
+                        <ul style="margin-left: 20px; margin-bottom: 10px;">
+                            <li><span class="text-en">Hello, I'm Nam. Nice to meet you. <button class="tts-btn" onclick="speak('Hello, I am Nam. Nice to meet you.')">🔊</button></span></li>
+                            <li><span class="text-en">Hi! My name is Anna. It's a pleasure to meet you. <button class="tts-btn" onclick="speak('Hi! My name is Anna. It is a pleasure to meet you.')">🔊</button></span></li>
+                        </ul>
+                        <p><strong>Greeting someone you know well:</strong></p>
+                        <ul style="margin-left: 20px;">
+                            <li><span class="text-en">Hey! How are you? <button class="tts-btn" onclick="speak('Hey! How are you?')">🔊</button></span></li>
+                            <li><span class="text-en">Long time no see! <button class="tts-btn" onclick="speak('Long time no see!')">🔊</button></span></li>
+                        </ul>
+                    </div>
+                    <button class="btn mt-20" onclick="markComplete('activity1')">Đánh dấu hoàn thành</button>
+                </div>
+            </section>
+
+            <!-- MODULE 3: ACTIVITY 2 -->
+            <section id="activity2" class="module-section">
+                <h1>Activity 2 – Successful Conversations</h1>
+                
+                <div class="card">
+                    <h2>2A. Pair work: Discuss your recent conversations</h2>
+                    <ul class="list-group">
+                        <li>
+                            <div>
+                                <span class="text-en">Who did you talk to? Who started the conversation? <button class="tts-btn" onclick="speak('Who did you talk to? Who started the conversation?')">🔊</button></span>
+                                <span class="text-vi">Bạn đã nói chuyện với ai? Ai là người bắt đầu?</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <span class="text-en">What did you talk about? How long did you talk? <button class="tts-btn" onclick="speak('What did you talk about? How long did you talk?')">🔊</button></span>
+                                <span class="text-vi">Bạn đã nói về chuyện gì? Nói trong bao lâu?</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <span class="text-en">Do you think it was a successful conversation? Why or why not? <button class="tts-btn" onclick="speak('Do you think it was a successful conversation? Why or why not?')">🔊</button></span>
+                                <span class="text-vi">Bạn có nghĩ đó là một cuộc hội thoại thành công không? Tại sao?</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h2>2B. Advice for successful conversations</h2>
+                    <p>Read this advice. Which are important things to do during a conversation? Check the boxes.</p>
+                    <ul class="list-group mt-20" id="advice-list">
+                        <!-- Generated via JS -->
+                    </ul>
+                    <div class="mt-20">
+                        <label style="font-weight: 600;">Bổ sung lời khuyên của bạn:</label>
+                        <input type="text" placeholder="Ví dụ: Use positive body language..." style="padding: 10px; width: 100%; border: 1px solid var(--border); border-radius: 8px; margin-top: 10px;">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Useful language (Ngôn ngữ hữu ích)</h2>
+                    <div style="margin-top: 15px;">
+                        <p><strong>Đồng ý (Agreeing):</strong></p>
+                        <ul style="margin-left: 20px; margin-bottom: 15px;">
+                            <li><span class="text-en">I agree. <button class="tts-btn" onclick="speak('I agree.')">🔊</button></span></li>
+                            <li><span class="text-en">That's a good point. <button class="tts-btn" onclick="speak('That is a good point.')">🔊</button></span></li>
+                        </ul>
+                        <p><strong>Bổ sung ý kiến (Adding an explanation):</strong></p>
+                        <ul style="margin-left: 20px;">
+                            <li><span class="text-en">It's important because... <button class="tts-btn" onclick="speak('It is important because...')">🔊</button></span></li>
+                            <li><span class="text-en">If you don't, people might think... <button class="tts-btn" onclick="speak('If you do not, other people might think...')">🔊</button></span></li>
+                        </ul>
+                    </div>
+                    <div style="margin-top: 15px; padding: 15px; background: #e0f2fe; border-radius: 8px;">
+                        <p><span class="text-en"><strong>A:</strong> It's very important to ask questions. <button class="tts-btn" onclick="speak('It is very important to ask questions.')">🔊</button></span></p>
+                        <p><span class="text-en"><strong>B:</strong> I agree. If you don't, other people might think you're not interested in the conversation. <button class="tts-btn" onclick="speak('I agree. If you do not, other people might think you are not interested in the conversation.')">🔊</button></span></p>
+                        <p class="text-vi" style="margin-top: 5px;">A: Đặt câu hỏi rất quan trọng. B: Tôi đồng ý. Nếu không, người khác có thể nghĩ bạn không hứng thú.</p>
+                    </div>
+                    <button class="btn mt-20" onclick="markComplete('activity2')">Đánh dấu hoàn thành</button>
+                </div>
+            </section>
+
+            <!-- MODULE 4: ACTIVITY 3 -->
+            <section id="activity3" class="module-section">
+                <h1>Activity 3 – Getting Acquainted</h1>
+                
+                <div class="card">
+                    <h2>3A. Appropriate Questions</h2>
+                    <p>Click to toggle: ✓ (Có thể hỏi) / ✗ (Không nên hỏi khi mới quen).</p>
+                    <div id="questions-container" style="display: grid; gap: 10px; margin-top: 15px;">
+                        <!-- Generated via JS -->
+                    </div>
+                    <button class="btn btn-outline mt-20" onclick="showExplanations()">Xem giải thích</button>
+                    <div id="explanation-box" style="display: none; margin-top: 15px; padding: 15px; background: #f8fafc; border-radius: 8px; font-size: 0.9rem;">
+                        <p><strong>Giải thích:</strong> Những câu hỏi về sở thích, quê quán, thể thao hoặc học tập thường dễ trả lời và ít nhạy cảm. Tránh hỏi về tuổi tác, tôn giáo, tình trạng hôn nhân và chuyện tình cảm khi mới gặp.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>3B. Choosing conversation topics</h2>
+                    <p>Choose 3 topics you are comfortable discussing. Then write 3 questions for each topic.</p>
+                    <div class="flex-gap mt-20" id="topics-container">
+                        <!-- Generated via JS -->
+                    </div>
+                    
+                    <div class="mt-20" id="topic-writing-area" style="display: none;">
+                        <h3>Viết câu hỏi cho chủ đề: <span id="selected-topic-title" style="color: var(--primary-dark);"></span></h3>
+                        <div style="display: grid; gap: 10px; margin-top: 10px;">
+                            <input type="text" placeholder="Câu hỏi 1..." style="padding: 10px; border: 1px solid var(--border); border-radius: 8px;">
+                            <input type="text" placeholder="Câu hỏi 2..." style="padding: 10px; border: 1px solid var(--border); border-radius: 8px;">
+                            <input type="text" placeholder="Câu hỏi 3..." style="padding: 10px; border: 1px solid var(--border); border-radius: 8px;">
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px; padding: 15px; background: #f0fdf4; border-radius: 8px;">
+                        <p><strong>Ví dụ: Family</strong></p>
+                        <ul style="margin-left: 20px;">
+                            <li><span class="text-en">Do you have a large family? <button class="tts-btn" onclick="speak('Do you have a large family?')">🔊</button></span></li>
+                            <li><span class="text-en">Do you have any brothers or sisters? <button class="tts-btn" onclick="speak('Do you have any brothers or sisters?')">🔊</button></span></li>
+                            <li><span class="text-en">Does your family live nearby? <button class="tts-btn" onclick="speak('Does your family live nearby?')">🔊</button></span></li>
+                        </ul>
+                        <p style="margin-top: 10px;"><span class="text-en">A: I'm comfortable talking about family. <button class="tts-btn" onclick="speak('I am comfortable talking about family.')">🔊</button></span></p>
+                        <p><span class="text-en">B: Me, too. Do you have a large family? <button class="tts-btn" onclick="speak('Me too. Do you have a large family?')">🔊</button></span></p>
+                    </div>
+                    <button class="btn mt-20" onclick="markComplete('activity3')">Đánh dấu hoàn thành</button>
+                </div>
+            </section>
+
+            <!-- MODULE 5: PRONUNCIATION LAB -->
+            <section id="pronunciation" class="module-section">
+                <h1>Pronunciation Lab</h1>
+                <div class="card">
+                    <h2>1. Word Pronunciation (IPA)</h2>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                        <tr style="background: var(--secondary); text-align: left;">
+                            <th style="padding: 10px; border-bottom: 2px solid var(--border);">Word</th>
+                            <th style="padding: 10px; border-bottom: 2px solid var(--border);">IPA (US)</th>
+                            <th style="padding: 10px; border-bottom: 2px solid var(--border);">Audio</th>
+                        </tr>
+                        <tr><td style="padding: 10px; border-bottom: 1px solid var(--border);">conversation</td><td style="padding: 10px; border-bottom: 1px solid var(--border); font-family: monospace;">/ˌkɑːnvərˈseɪʃn/</td><td style="padding: 10px; border-bottom: 1px solid var(--border);"><button class="tts-btn" onclick="speak('conversation')">🔊</button></td></tr>
+                        <tr><td style="padding: 10px; border-bottom: 1px solid var(--border);">successful</td><td style="padding: 10px; border-bottom: 1px solid var(--border); font-family: monospace;">/səkˈsesfl/</td><td style="padding: 10px; border-bottom: 1px solid var(--border);"><button class="tts-btn" onclick="speak('successful')">🔊</button></td></tr>
+                        <tr><td style="padding: 10px; border-bottom: 1px solid var(--border);">attentive</td><td style="padding: 10px; border-bottom: 1px solid var(--border); font-family: monospace;">/əˈtentɪv/</td><td style="padding: 10px; border-bottom: 1px solid var(--border);"><button class="tts-btn" onclick="speak('attentive')">🔊</button></td></tr>
+                        <tr><td style="padding: 10px; border-bottom: 1px solid var(--border);">interrupt</td><td style="padding: 10px; border-bottom: 1px solid var(--border); font-family: monospace;">/ˌɪntəˈrʌpt/</td><td style="padding: 10px; border-bottom: 1px solid var(--border);"><button class="tts-btn" onclick="speak('interrupt')">🔊</button></td></tr>
+                        <tr><td style="padding: 10px; border-bottom: 1px solid var(--border);">acquaintance</td><td style="padding: 10px; border-bottom: 1px solid var(--border); font-family: monospace;">/əˈkweɪntəns/</td><td style="padding: 10px; border-bottom: 1px solid var(--border);"><button class="tts-btn" onclick="speak('acquaintance')">🔊</button></td></tr>
+                        <tr><td style="padding: 10px; border-bottom: 1px solid var(--border);">compliment</td><td style="padding: 10px; border-bottom: 1px solid var(--border); font-family: monospace;">/ˈkɑːmplɪmənt/</td><td style="padding: 10px; border-bottom: 1px solid var(--border);"><button class="tts-btn" onclick="speak('compliment')">🔊</button></td></tr>
+                        <tr><td style="padding: 10px; border-bottom: 1px solid var(--border);">maintain</td><td style="padding: 10px; border-bottom: 1px solid var(--border); font-family: monospace;">/meɪnˈteɪn/</td><td style="padding: 10px; border-bottom: 1px solid var(--border);"><button class="tts-btn" onclick="speak('maintain')">🔊</button></td></tr>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h2>2. Connected Speech (Nối âm & Giảm âm)</h2>
+                    <p>Trong tiếng Anh Mỹ, các từ thường được nối với nhau tạo thành âm liền mạch.</p>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li><strong>Linking (Nối âm):</strong> Phụ âm cuối + Nguyên âm đầu. <br> Ví dụ: <span class="text-en">"meet you" -> /miːtʃuː/</span> <button class="tts-btn" onclick="speak('meet you')">🔊</button></li>
+                        <li><strong>Reduction (Giảm âm):</strong> Các từ chức năng (to, for, and) thường được đọc nhẹ đi. <br> Ví dụ: <span class="text-en">"Nice to meet you" -> /naɪs tə miːtʃuː/</span> <button class="tts-btn" onclick="speak('Nice to meet you')">🔊</button></li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h2>3. Shadowing Practice</h2>
+                    <p>Nghe và nhắc lại theo tốc độ mong muốn. Hãy thử nói to theo âm thanh.</p>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px; background: var(--secondary); padding: 15px; border-radius: 8px;">
+                        <span class="text-en" style="flex: 1;">It's very important to ask questions. <button class="tts-btn" onclick="speak('It is very important to ask questions.')">🔊</button></span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px; background: var(--secondary); padding: 15px; border-radius: 8px;">
+                        <span class="text-en" style="flex: 1;">I agree. If you don't, other people might think you're not interested. <button class="tts-btn" onclick="speak('I agree. If you do not, other people might think you are not interested.')">🔊</button></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MODULE 6: INTERACTIVE EXERCISES -->
+            <section id="exercises" class="module-section">
+                <h1>Interactive Exercises</h1>
+                <div class="card">
+                    <div class="flex-between mb-20">
+                        <h2>Kiểm tra kiến thức</h2>
+                        <span id="quiz-score-display" style="font-weight: bold; color: var(--primary-dark);">Điểm: 0/25</span>
+                    </div>
+                    <div id="quiz-container">
+                        <!-- Questions generated via JS -->
+                    </div>
+                    <button class="btn mt-20" onclick="submitQuiz()">Nộp bài</button>
+                    <button class="btn btn-outline mt-20" onclick="resetQuiz()">Làm lại</button>
+                </div>
+            </section>
+
+            <!-- MODULE 7: SPEAKING PRACTICE -->
+            <section id="speaking" class="module-section">
+                <h1>Speaking Practice</h1>
+                
+                <div class="card">
+                    <h2>Mode 1: Guided Conversation</h2>
+                    <p><strong>Tình huống:</strong> Bạn tham gia một câu lạc bộ tiếng Anh và gặp một người bạn mới.</p>
+                    <div style="background: var(--secondary); padding: 15px; border-radius: 8px; margin-top: 10px;">
+                        <p><strong>Gợi ý:</strong></p>
+                        <ol style="margin-left: 20px;">
+                            <li>Chào và giới thiệu bản thân. <span class="text-en">"Hi, I'm..." <button class="tts-btn" onclick="speak('Hi, I am...')">🔊</button></span></li>
+                            <li>Hỏi tên và quê quán. <span class="text-en">"Where are you from?" <button class="tts-btn" onclick="speak('Where are you from?')">🔊</button></span></li>
+                            <li>Hỏi về sở thích. <span class="text-en">"What do you do in your free time?" <button class="tts-btn" onclick="speak('What do you do in your free time?')">🔊</button></span></li>
+                            <li>Kết thúc cuộc trò chuyện. <span class="text-en">"It was nice talking to you!" <button class="tts-btn" onclick="speak('It was nice talking to you!')">🔊</button></span></li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Mode 2: Role-play</h2>
+                    <p>Đóng vai và thực hành với bạn học.</p>
+                    <div class="flex-gap">
+                        <div style="flex: 1; min-width: 200px; padding: 15px; border: 1px solid var(--border); border-radius: 8px;">
+                            <h3>Role A: New Student</h3>
+                            <p>Bạn là sinh viên mới. Hãy chủ động bắt chuyện và hỏi 3 câu hỏi làm quen.</p>
+                        </div>
+                        <div style="flex: 1; min-width: 200px; padding: 15px; border: 1px solid var(--border); border-radius: 8px;">
+                            <h3>Role B: Club Member</h3>
+                            <p>Bạn là thành viên câu lạc bộ. Hãy chào đón, trả lời và hỏi lại để duy trì cuộc hội thoại.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Mode 3: Shadowing</h2>
+                    <p>Nhấn nút phát, nghe và nhắc lại ngay lập tức (shadowing).</p>
+                    <div style="margin-top: 15px;">
+                        <p><span class="text-en">"Nice to meet you. What are you studying?" <button class="tts-btn" onclick="speak('Nice to meet you. What are you studying?')">🔊</button></span></p>
+                        <p><span class="text-en">"I'm studying English. How about you?" <button class="tts-btn" onclick="speak('I am studying English. How about you?')">🔊</button></span></p>
+                        <p><span class="text-en">"I enjoy working with people and solving problems." <button class="tts-btn" onclick="speak('I enjoy working with people and solving problems.')">🔊</button></span></p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2>Checklist tự đánh giá</h2>
+                    <ul class="list-group" id="speaking-checklist">
+                        <li><input type="checkbox"> Tôi chào hỏi và giới thiệu bản thân tự nhiên.</li>
+                        <li><input type="checkbox"> Tôi đặt câu hỏi phù hợp với người mới gặp.</li>
+                        <li><input type="checkbox"> Tôi biết cách đặt câu hỏi tiếp nối.</li>
+                        <li><input type="checkbox"> Tôi lắng nghe và phản hồi thay vì chỉ hỏi liên tục.</li>
+                    </ul>
+                    <button class="btn mt-20" onclick="markComplete('speaking')">Đánh dấu hoàn thành</button>
+                </div>
+            </section>
+
+            <!-- MODULE 8: FLASHCARDS -->
+            <section id="flashcards" class="module-section">
+                <h1>Vocabulary Flashcards</h1>
+                <p class="text-center mb-20">Nhấn vào thẻ để lật. Đánh dấu trạng thái để ôn tập sau.</p>
+                
+                <div class="flashcard-container" onclick="flipCard(this)">
+                    <div class="flashcard" id="current-card">
+                        <div class="flashcard-front">
+                            <h2 id="fc-word">greet</h2>
+                            <span class="ipa" id="fc-ipa">/ɡriːt/</span>
+                            <p style="margin-top: 10px; color: var(--text-light);">(verb)</p>
+                        </div>
+                        <div class="flashcard-back">
+                            <h3 id="fc-meaning">chào hỏi</h3>
+                            <p style="margin-top: 15px; font-style: italic;" id="fc-example">"She greeted us with a smile."</p>
+                            <button class="tts-btn mt-20" onclick="event.stopPropagation(); speak(document.getElementById('fc-example').innerText.replace(/"/g, ''))">🔊</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex-between mt-20" style="max-width: 400px; margin: 20px auto 0;">
+                    <button class="btn btn-danger" onclick="markCard('review')">Cần ôn tập</button>
+                    <button class="btn btn-outline" onclick="nextCard()">Tiếp theo ➡</button>
+                    <button class="btn btn-success" onclick="markCard('known')">Đã nhớ</button>
+                </div>
+                
+                <div class="text-center mt-20">
+                    <p>Thẻ: <span id="fc-counter">1/12</span></p>
+                </div>
+            </section>
+
+            <!-- MODULE 9: DASHBOARD -->
+            <section id="dashboard" class="module-section">
+                <h1>Progress Dashboard</h1>
+                <div class="card">
+                    <h2>Tiến độ học tập</h2>
+                    <div style="margin-top: 20px;">
+                        <div class="flex-between mb-20">
+                            <span>Bài học hoàn thành:</span>
+                            <strong id="dash-sections">0/8</strong>
+                        </div>
+                        <div class="flex-between mb-20">
+                            <span>Điểm bài tập gần nhất:</span>
+                            <strong id="dash-score">Chưa làm</strong>
+                        </div>
+                        <div class="flex-between mb-20">
+                            <span>Từ vựng đã nhớ:</span>
+                            <strong id="dash-words">0/12</strong>
+                        </div>
+                        <div class="flex-between mb-20">
+                            <span>Từ vựng cần ôn tập:</span>
+                            <strong id="dash-review">0</strong>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 30px; padding: 15px; background: #fee2e2; border-radius: 8px;">
+                        <h3 style="color: var(--danger); margin-bottom: 10px;">Vùng nguy hiểm</h3>
+                        <p style="margin-bottom: 15px; font-size: 0.9rem;">Dữ liệu được lưu trên trình duyệt này. Xóa dữ liệu sẽ không thể khôi phục.</p>
+                        <button class="btn btn-danger" onclick="confirmReset()">Xóa toàn bộ tiến độ</button>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Reset Confirmation Modal -->
+    <div class="modal" id="reset-modal">
+        <div class="modal-content">
+            <h2 style="color: var(--danger);">Xác nhận xóa</h2>
+            <p style="margin: 20px 0;">Bạn có chắc chắn muốn xóa toàn bộ tiến độ học tập? Hành động này không thể hoàn tác.</p>
+            <div class="flex-gap" style="justify-content: center;">
+                <button class="btn btn-outline" onclick="closeModal()">Hủy</button>
+                <button class="btn btn-danger" onclick="resetProgress()">Xóa dữ liệu</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA ---
+        const adviceData = [
+            { en: "Address people by name.", vi: "Gọi người đối diện bằng tên của họ." },
+            { en: "Ask questions.", vi: "Đặt câu hỏi để thể hiện sự quan tâm." },
+            { en: "Smile and nod a lot.", vi: "Mỉm cười và gật đầu để thể hiện phản ứng tích cực." },
+            { en: "Listen attentively.", vi: "Lắng nghe chăm chú, không chỉ chờ đến lượt mình nói." },
+            { en: "Maintain eye contact.", vi: "Duy trì giao tiếp bằng mắt một cách tự nhiên." },
+            { en: "Give compliments.", vi: "Đưa ra lời khen chân thành và phù hợp." },
+            { en: "Involve everyone.", vi: "Khuyến khích tất cả mọi người tham gia cuộc trò chuyện." },
+            { en: "Avoid interrupting.", vi: "Tránh ngắt lời người khác khi họ đang nói." }
+        ];
+
+        const questionsData = [
+            { q: "Where do you live?", ans: "yes" },
+            { q: "Where are you from?", ans: "yes" },
+            { q: "How old are you?", ans: "no" },
+            { q: "What sports do you like?", ans: "yes" },
+            { q: "Do you have any brothers or sisters?", ans: "yes" },
+            { q: "What do you do for a living?", ans: "yes" },
+            { q: "Are you married?", ans: "no" },
+            { q: "What kinds of music do you like?", ans: "yes" },
+            { q: "Where did you go to high school?", ans: "yes" },
+            { q: "What's your religion?", ans: "no" },
+            { q: "Do you have a boyfriend / girlfriend?", ans: "no" },
+            { q: "Do you have any children?", ans: "no" }
+        ];
+
+        const topicsList = ["family", "music", "school", "future plans", "politics", "sports", "health", "relationships", "travel", "hobbies", "religion", "work"];
+
+        const flashcardsData = [
+            { word: "greet", type: "verb", ipa: "/ɡriːt/", meaning: "chào hỏi", example: "She greeted us with a smile." },
+            { word: "bow", type: "verb", ipa: "/baʊ/", meaning: "cúi chào", example: "In Japan, people bow when they meet." },
+            { word: "conversation", type: "noun", ipa: "/ˌkɑːnvərˈseɪʃn/", meaning: "cuộc hội thoại", example: "We had a long conversation about our future." },
+            { word: "successful", type: "adj", ipa: "/səkˈsesfl/", meaning: "thành công, hiệu quả", example: "It was a very successful meeting." },
+            { word: "acquainted", type: "adj", ipa: "/əˈkweɪntɪd/", meaning: "quen biết", example: "I am pleased to get acquainted with you." },
+            { word: "attentive", type: "adj", ipa: "/əˈtentɪv/", meaning: "chăm chú, ân cần", example: "She was an attentive listener." },
+            { word: "maintain", type: "verb", ipa: "/meɪnˈteɪn/", meaning: "duy trì", example: "It's important to maintain eye contact." },
+            { word: "compliment", type: "noun/verb", ipa: "/ˈkɑːmplɪmənt/", meaning: "lời khen / khen ngợi", example: "He gave me a nice compliment on my English." },
+            { word: "interrupt", type: "verb", ipa: "/ˌɪntəˈrʌpt/", meaning: "ngắt lời", example: "Please don't interrupt when someone is speaking." },
+            { word: "involve", type: "verb", ipa: "/ɪnˈvɑːlv/", meaning: "lôi cuốn, bao gồm", example: "Try to involve everyone in the discussion." },
+            { word: "appropriate", type: "adj", ipa: "/əˈproʊpriət/", meaning: "phù hợp", example: "Is it appropriate to ask about age?" },
+            { word: "relationship", type: "noun", ipa: "/rɪˈleɪʃnʃɪp/", meaning: "mối quan hệ", example: "They have a good working relationship." }
+        ];
+
+        const quizData = [
+            { q: "Which expression is most suitable when you meet someone for the first time?", opts: ["Long time no see!", "Nice to meet you.", "What's up, mate?"], ans: 1, exp: "Dùng 'Nice to meet you' khi gặp lần đầu." },
+            { q: "What does 'maintain eye contact' mean?", opts: ["Look at your phone", "Avoid looking at people", "Look at the other person naturally while talking"], ans: 2, exp: "Duy trì giao tiếp bằng mắt giúp thể hiện sự tôn trọng và tự tin." },
+            { q: "Which action helps keep a conversation going?", opts: ["Asking relevant questions", "Interrupting frequently", "Giving one-word answers all the time"], ans: 0, exp: "Đặt câu hỏi liên quan thể hiện sự quan tâm và mở rộng cuộc trò chuyện." },
+            { q: "Which question is usually safer for a first meeting?", opts: ["What's your religion?", "What kinds of music do you like?", "Are you married?"], ans: 1, exp: "Sở thích âm nhạc là chủ đề an toàn và dễ bắt chuyện." },
+            { q: "What does 'avoid interrupting' mean?", opts: ["Speak louder", "Stop listening", "Do not cut in while someone is speaking"], ans: 2, exp: "Không ngắt lời người khác khi họ đang nói." },
+            { q: "Choose the natural response: 'Nice to meet you.'", opts: ["Nice to meet you, too.", "I am meeting yesterday.", "I meet you tomorrow."], ans: 0, exp: "Phản hồi tự nhiên là 'Nice to meet you, too.'" },
+            { q: "Which phrase introduces a follow-up question?", opts: ["That's the end.", "How about you?", "Never mind, goodbye."], ans: 1, exp: "'How about you?' dùng để hỏi ngược lại người đối diện." },
+            { q: "Which is an example of attentive listening?", opts: ["Checking your phone constantly", "Changing the topic before the person finishes", "Listening carefully and responding to what they say"], ans: 2, exp: "Lắng nghe chăm chú và phản hồi phù hợp." },
+            { q: "How do you greet a close friend informally?", opts: ["Good morning, sir.", "Hey! How are you doing?", "It is a pleasure to make your acquaintance."], ans: 1, exp: "Dùng câu chào thân mật, thoải mái với bạn bè." },
+            { q: "What does 'successful' mean in Vietnamese?", opts: ["Thất bại", "Thành công", "Bình thường"], ans: 1, exp: "Successful = thành công." },
+            { q: "Which topic is usually sensitive when you first meet someone?", opts: ["Hobbies", "Travel", "Politics"], ans: 2, exp: "Chính trị là chủ đề nhạy cảm, nên tránh khi mới quen." },
+            { q: "Complete the sentence: 'I'm comfortable ________ about family.'", opts: ["talk", "talking", "to talk"], ans: 1, exp: "Cấu trúc: comfortable + V-ing." },
+            { q: "What is the correct response to 'Tell me more'?", opts: ["I'm fine, thanks.", "Sure, well, I really enjoy reading.", "Nice to meet you."], ans: 1, exp: "Đưa ra thêm thông tin để tiếp tục cuộc hội thoại." },
+            { q: "'Address people by name' means:", opts: ["Give them your address", "Call them by their name", "Write their name down"], ans: 1, exp: "Gọi tên người đối diện tạo thiện cảm." },
+            { q: "Which question is appropriate?", opts: ["How much money do you make?", "What do you do for a living?", "Why are you single?"], ans: 1, exp: "Hỏi về nghề nghiệp là phù hợp." },
+            { q: "Which is a compliment?", opts: ["You look terrible today.", "I love your shirt, it's very nice!", "Are you sick?"], ans: 1, exp: "Khen ngợi (compliment) một cách chân thành." },
+            { q: "Choose the correct response: 'How's it going?'", opts: ["It's going to the park.", "Pretty good, thanks.", "I am going."], ans: 1, exp: "Đây là cách hỏi thăm thân mật." },
+            { q: "When is it okay to ask 'Are you married?'", opts: ["First meeting", "When you know them very well", "During a job interview"], ans: 1, exp: "Chỉ nên hỏi khi đã thực sự thân thiết." },
+            { q: "Which word means 'to keep something going'?", opts: ["Maintain", "Interrupt", "Involve"], ans: 0, exp: "Maintain = duy trì." },
+            { q: "What does 'acquainted' mean?", opts: ["Known slightly", "Very close friend", "Enemy"], ans: 0, exp: "Acquainted nghĩa là quen biết (chưa thân thiết)." },
+            { q: "Complete the dialogue: A: 'What sports do you like?' B: '________'", opts: ["I like tennis.", "I am tennis.", "Tennis is playing."], ans: 0, exp: "Trả lời tự nhiên về sở thích." },
+            { q: "Which is a bad advice for conversations?", opts: ["Listen attentively", "Avoid interrupting", "Look at your phone constantly"], ans: 2, exp: "Nhìn điện thoại liên tục là bất lịch sự." },
+            { q: "'Nice to see you' is used when:", opts: ["Meeting for the first time", "Meeting again someone you know", "Saying goodbye"], ans: 1, exp: "'See' dùng khi gặp lại người đã quen." },
+            { q: "What is IPA of 'conversation'?", opts: ["/kənˈvɜːrʃn/", "/ˌkɑːnvərˈseɪʃn/", "/kɒnvəˈseɪʃən/"], ans: 1, exp: "Phiên âm chuẩn Mỹ là /ˌkɑːnvərˈseɪʃn/." },
+            { q: "Complete: 'If you don't ask questions, people might think you're not ________.'", opts: ["interesting", "interested", "interest"], ans: 1, exp: "Cấu trúc: to be interested in something." }
+        ];
+
+        // --- STATE & STORAGE ---
+        let state = {
+            progress: {
+                overview: false, activity1: false, activity2: false, activity3: false,
+                pronunciation: false, exercises: false, speaking: false, flashcards: false
+            },
+            quizScore: null,
+            flashcards: { known: [], review: [] },
+            selectedTopic: null
+        };
+
+        function loadState() {
+            const saved = localStorage.getItem('successfulConversationsState');
+            if (saved) {
+                try {
+                    state = { ...state, ...JSON.parse(saved) };
+                } catch(e) { console.error("Lỗi đọc dữ liệu", e); }
+            }
+            updateUI();
+        }
+
+        function saveState() {
+            localStorage.setItem('successfulConversationsState', JSON.stringify(state));
+            updateUI();
+        }
+
+        // --- TTS ENGINE ---
+        let voices = [];
+        let currentUtterance = null;
+
+        function loadVoices() {
+            voices = window.speechSynthesis.getVoices();
+            const select = document.getElementById('voice-select');
+            select.innerHTML = '';
+            
+            // Ưu tiên giọng en-US
+            const usVoices = voices.filter(v => v.lang === 'en-US' || v.lang === 'en_US');
+            const otherEnVoices = voices.filter(v => v.lang.startsWith('en') && v.lang !== 'en-US' && v.lang !== 'en_US');
+            
+            const defaultVoices = usVoices.length > 0 ? usVoices : (otherEnVoices.length > 0 ? otherEnVoices : voices);
+
+            defaultVoices.forEach(voice => {
+                const opt = document.createElement('option');
+                opt.value = voice.name;
+                opt.textContent = `${voice.name} (${voice.lang})`;
+                if (voice.lang.includes('US')) opt.style.fontWeight = 'bold';
+                select.appendChild(opt);
+            });
+
+            if (defaultVoices.length === 0) {
+                const opt = document.createElement('option');
+                opt.textContent = "Thiết bị không hỗ trợ TTS";
+                select.appendChild(opt);
+            }
+        }
+
+        if ('speechSynthesis' in window) {
+            speechSynthesis.onvoiceschanged = loadVoices;
+            loadVoices();
+        } else {
+            alert("Trình duyệt của bạn không hỗ trợ Text-to-Speech.");
+        }
+
+        function speak(text, rateOverride = null) {
+            if (!('speechSynthesis' in window)) return;
+            
+            window.speechSynthesis.cancel(); // Dừng câu đang đọc
+            
+            currentUtterance = new SpeechSynthesisUtterance(text);
+            const selectedVoiceName = document.getElementById('voice-select').value;
+            const voice = voices.find(v => v.name === selectedVoiceName);
+            
+            if (voice) {
+                currentUtterance.voice = voice;
+            } else {
+                currentUtterance.lang = 'en-US';
+            }
+
+            const rate = rateOverride || parseFloat(document.getElementById('rate-select').value);
+            currentUtterance.rate = rate;
+            
+            window.speechSynthesis.speak(currentUtterance);
+        }
+
+        function stopTTS() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+        }
+
+        // --- NAVIGATION ---
+        function navigateTo(sectionId) {
+            document.querySelectorAll('.module-section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            
+            document.querySelectorAll('.nav-links button').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // --- PROGRESS TRACKING ---
+        function markComplete(sectionId) {
+            state.progress[sectionId] = true;
+            saveState();
+            alert("Đã đánh dấu hoàn thành!");
+        }
+
+        function updateUI() {
+            // Update Progress Bar
+            const totalSections = Object.keys(state.progress).length;
+            const completedSections = Object.values(state.progress).filter(v => v).length;
+            const percent = Math.round((completedSections / totalSections) * 100);
+            
+            document.getElementById('overall-progress-text').innerText = percent + '%';
+            document.getElementById('overall-progress-bar').style.width = percent + '%';
+            document.getElementById('dash-sections').innerText = `${completedSections}/${totalSections}`;
+
+            // Update Quiz Score
+            if (state.quizScore !== null) {
+                document.getElementById('dash-score').innerText = `${state.quizScore.correct}/${state.quizScore.total}`;
+                document.getElementById('quiz-score-display').innerText = `Điểm: ${state.quizScore.correct}/${state.quizScore.total}`;
+            }
+
+            // Update Flashcards
+            document.getElementById('dash-words').innerText = `${state.flashcards.known.length}/${flashcardsData.length}`;
+            document.getElementById('dash-review').innerText = state.flashcards.review.length;
+        }
+
+        // --- RENDER DYNAMIC CONTENT ---
+
+        // Activity 2B: Advice
+        const adviceList = document.getElementById('advice-list');
+        adviceData.forEach((item, index) => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <input type="checkbox" id="advice-${index}">
+                <div style="flex: 1;">
+                    <label for="advice-${index}" style="cursor: pointer;">
+                        <span class="text-en">${item.en} <button class="tts-btn" onclick="event.preventDefault(); speak('${item.en}')">🔊</button></span>
+                        <span class="text-vi">${item.vi}</span>
+                    </label>
+                </div>
+            `;
+            adviceList.appendChild(li);
+        });
+
+        // Activity 3A: Questions Toggle
+        const questionsContainer = document.getElementById('questions-container');
+        questionsData.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.style.display = 'flex';
+            div.style.alignItems = 'center';
+            div.style.justifyContent = 'space-between';
+            div.style.padding = '10px';
+            div.style.background = '#f8fafc';
+            div.style.borderRadius = '8px';
+            div.innerHTML = `
+                <span class="text-en">${item.q} <button class="tts-btn" onclick="speak('${item.q}')">🔊</button></span>
+                <button class="q-toggle" id="q-toggle-${index}" onclick="toggleQuestion(${index})">?</button>
+            `;
+            questionsContainer.appendChild(div);
+        });
+
+        window.toggleQuestion = function(index) {
+            const btn = document.getElementById(`q-toggle-${index}`);
+            if (btn.classList.contains('yes')) {
+                btn.classList.remove('yes');
+                btn.classList.add('no');
+                btn.innerText = '✗';
+            } else if (btn.classList.contains('no')) {
+                btn.classList.remove('no');
+                btn.innerText = '?';
+            } else {
+                btn.classList.add('yes');
+                btn.innerText = '✓';
+            }
+        }
+
+        window.showExplanations = function() {
+            document.getElementById('explanation-box').style.display = 'block';
+        }
+
+        // Activity 3B: Topics
+        const topicsContainer = document.getElementById('topics-container');
+        topicsList.forEach(topic => {
+            const btn = document.createElement('button');
+            btn.className = 'btn btn-outline';
+            btn.innerText = topic;
+            btn.onclick = () => selectTopic(topic, btn);
+            topicsContainer.appendChild(btn);
+        });
+
+        window.selectTopic = function(topic, btn) {
+            document.querySelectorAll('#topics-container .btn').forEach(b => b.classList.remove('btn-success'));
+            btn.classList.add('btn-success');
+            document.getElementById('selected-topic-title').innerText = topic;
+            document.getElementById('topic-writing-area').style.display = 'block';
+        }
+
+        // Quiz
+        const quizContainer = document.getElementById('quiz-container');
+        quizData.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'quiz-question';
+            div.id = `q-${index}`;
+            
+            let optsHTML = '';
+            item.opts.forEach((opt, optIndex) => {
+                optsHTML += `
+                    <label>
+                        <input type="radio" name="q${index}" value="${optIndex}">
+                        ${opt}
+                    </label>
+                `;
+            });
+
+            div.innerHTML = `
+                <h4>${index + 1}. ${item.q}</h4>
+                <div class="quiz-options">${optsHTML}</div>
+                <div class="explanation" id="exp-${index}"><strong>Giải thích:</strong> ${item.exp}</div>
+            `;
+            quizContainer.appendChild(div);
+        });
+
+        window.submitQuiz = function() {
+            let correct = 0;
+            quizData.forEach((item, index) => {
+                const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                const expDiv = document.getElementById(`exp-${index}`);
+                
+                expDiv.classList.add('show');
+
+                if (selected) {
+                    const val = parseInt(selected.value);
+                    if (val === item.ans) {
+                        correct++;
+                        selected.parentElement.style.background = '#dcfce7';
+                    } else {
+                        selected.parentElement.style.background = '#fee2e2';
+                        document.querySelector(`input[name="q${index}"][value="${item.ans}"]`).parentElement.style.background = '#dcfce7';
+                    }
+                }
+            });
+            
+            state.quizScore = { correct: correct, total: quizData.length };
+            saveState();
+            alert(`Bạn đã trả lời đúng ${correct}/${quizData.length} câu!`);
+        }
+
+        window.resetQuiz = function() {
+            document.querySelectorAll('input[type="radio"]').forEach(input => input.checked = false);
+            document.querySelectorAll('.quiz-options label').forEach(label => label.style.background = '');
+            document.querySelectorAll('.explanation').forEach(exp => exp.classList.remove('show'));
+            state.quizScore = null;
+            saveState();
+        }
+
+        // Flashcards
+        let currentCardIndex = 0;
+
+        window.flipCard = function(el) {
+            el.querySelector('.flashcard').classList.toggle('flipped');
+        }
+
+        window.nextCard = function() {
+            document.getElementById('current-card').classList.remove('flipped');
+            setTimeout(() => {
+                currentCardIndex = (currentCardIndex + 1) % flashcardsData.length;
+                renderCard();
+            }, 300);
+        }
+
+        window.markCard = function(status) {
+            const card = flashcardsData[currentCardIndex];
+            
+            // Xóa khỏi cả 2 danh sách trước khi thêm mới
+            state.flashcards.known = state.flashcards.known.filter(w => w !== card.word);
+            state.flashcards.review = state.flashcards.review.filter(w => w !== card.word);
+
+            if (status === 'known') {
+                state.flashcards.known.push(card.word);
+            } else {
+                state.flashcards.review.push(card.word);
+            }
+            
+            saveState();
+            nextCard();
+        }
+
+        function renderCard() {
+            const card = flashcardsData[currentCardIndex];
+            document.getElementById('fc-word').innerText = card.word;
+            document.getElementById('fc-ipa').innerText = card.ipa;
+            document.getElementById('fc-meaning').innerText = card.meaning;
+            document.getElementById('fc-example').innerText = `"${card.example}"`;
+            document.getElementById('fc-counter').innerText = `${currentCardIndex + 1}/${flashcardsData.length}`;
+            
+            // Reset audio button click propagation
+            const audioBtn = document.querySelector('.flashcard-back .tts-btn');
+            audioBtn.onclick = (e) => {
+                e.stopPropagation();
+                speak(card.example);
+            };
+        }
+
+        // Dashboard Reset
+        window.confirmReset = function() {
+            document.getElementById('reset-modal').classList.add('active');
+        }
+
+        window.closeModal = function() {
+            document.getElementById('reset-modal').classList.remove('active');
+        }
+
+        window.resetProgress = function() {
+            localStorage.removeItem('successfulConversationsState');
+            location.reload();
+        }
+
+        // --- INIT ---
+        window.onload = function() {
+            loadState();
+            renderCard();
+        };
+
+    </script>
+</body>
+</html>
